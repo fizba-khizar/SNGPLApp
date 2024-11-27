@@ -33,18 +33,25 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    # Import iOS Code Signing Certificate
+    # Import iOS Code Signing Certificate with debugging
     - name: Import iOS Code Signing Certificate
       run: |
+        # Decode and save the certificate
         echo "$IOS_CERTIFICATE" | base64 --decode > certificate.p12
-        # Create a temporary keychain to import the certificate into
+        # Check if the certificate file was decoded successfully
+        ls -l certificate.p12
+
+        # Create a temporary keychain
         security create-keychain -p "" build.keychain
-        # Import the certificate (use the password if needed)
-        security import certificate.p12 -k build.keychain -P "" -T /usr/bin/codesign
+        security list-keychains -d user
         security unlock-keychain -p "" build.keychain
-        security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
-        # Check that the certificate was added to the keychain
+
+        # Import the certificate and private key (use the correct password for the certificate if needed)
+        security import certificate.p12 -k build.keychain -P "" -T /usr/bin/codesign
+
+        # Check if the certificate was added successfully
         security find-certificate -a -p build.keychain
+        security list-keychains -d user
 
     # Build the iOS Project
     - name: Build iOS Project
