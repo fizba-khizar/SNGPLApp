@@ -34,9 +34,9 @@ jobs:
       run: dotnet restore
 
     - name: Build iOS Project
-      run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios
+      run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -nowarn:0414
 
     - name: Publish the iOS Project (IPA)
       run: |
-        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output /p:PublishTrimmed=false /p:LinkerBehavior=LinkFramework
+        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:PublishTrimmed=false /p:LinkerBehavior=LinkFramework
         mv ./output/*.ipa ./build/ios/SNGPL.ipa
