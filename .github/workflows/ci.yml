@@ -36,6 +36,11 @@ jobs:
     - name: Build iOS Project
       run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -nowarn:0414
 
+    # Build for iOS Simulator (Skip Code-signing)
+    - name: Build for iOS Simulator (Skip Code-signing)
+      run: |
+        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -r ios-x64 --no-self-contained /p:PublishTrimmed=true
+
     - name: Publish the iOS Project (IPA)
       run: |
         dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:RuntimeIdentifier=ios-arm64 /p:PlatformTarget=arm64 /p:MtouchLink=None /p:LinkerBehavior=LinkFramework
