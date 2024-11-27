@@ -17,6 +17,8 @@ jobs:
         dotnet-version: '8.0'
     - name: Restore dependencies
       run: dotnet restore
+    - name: Restore .NET MAUI Workloads
+      run: dotnet workload restore
     - name: Build iOS Project
       run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios
     - name: Publish the iOS Project (IPA)
