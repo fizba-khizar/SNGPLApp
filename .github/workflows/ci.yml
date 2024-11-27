@@ -19,7 +19,7 @@ jobs:
     - name: Set up .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '8.0' # Make sure this matches the version you're using
+        dotnet-version: '8.0'
 
     - name: Clean Workloads Cache
       run: |
@@ -33,32 +33,35 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    # Import iOS Code Signing Certificate with debugging
+    # Debug the certificate secret and check its length
+    - name: Debug certificate secret
+      run: |
+        echo "$IOS_CERTIFICATE" | base64 --decode > certificate.p12
+        ls -l certificate.p12
+        # Output the first 100 bytes to verify the decoding (only for debugging)
+        head -c 100 certificate.p12
+
+    # Import iOS Code Signing Certificate
     - name: Import iOS Code Signing Certificate
       run: |
-        # Decode and save the certificate
-        echo "$IOS_CERTIFICATE" | base64 --decode > certificate.p12
-        # Check if the certificate file was decoded successfully
+        # Check if the certificate is successfully decoded
         ls -l certificate.p12
-
+        if [ ! -f certificate.p12 ]; then
+          echo "Certificate file not found or decoding failed!"
+          exit 1
+        fi
         # Create a temporary keychain
         security create-keychain -p "" build.keychain
-        security list-keychains -d user
         security unlock-keychain -p "" build.keychain
-
-        # Import the certificate and private key (use the correct password for the certificate if needed)
+        # Import the certificate into the keychain
         security import certificate.p12 -k build.keychain -P "" -T /usr/bin/codesign
 
-        # Check if the certificate was added successfully
+        # Verify the certificate was imported
         security find-certificate -a -p build.keychain
-        security list-keychains -d user
 
-    # Build the iOS Project
-    - name: Build iOS Project
-      run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -nowarn:0414
-
-    # Publish the iOS Project (IPA)
-    - name: Publish the iOS Project (IPA)
+    # Build and Publish the iOS Project (IPA)
+    - name: Build and Publish the iOS Project
       run: |
+        dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios
         dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:RuntimeIdentifier=ios-arm64 /p:PlatformTarget=arm64 /p:MtouchLink=None /p:LinkerBehavior=LinkFramework
         mv ./bin/Release/net8.0-ios/ios-arm64/*.ipa ./build/ios/SNGPL.ipa
