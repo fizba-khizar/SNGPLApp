@@ -35,9 +35,9 @@ jobs:
 
     - name: Build iOS Project (without signing)
       run: |
-        dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -nowarn:0414 /p:MtouchCodeSign=false
+        dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -nowarn:0414 /p:MtouchCodeSign=false /p:CodesignKey="" /p:ProvisioningProfileUuid=""
 
     - name: Publish the iOS Project (IPA without signing)
       run: |
-        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:MtouchCodeSign=false /p:RuntimeIdentifier=ios-arm64 /p:PlatformTarget=arm64 /p:PublishTrimmed=true /p:CodesignKey="" /p:ProvisioningProfileUuid=""
+        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:MtouchCodeSign=false /p:RuntimeIdentifier=ios-arm64 /p:PlatformTarget=arm64 /p:PublishTrimmed=true /p:CodesignKey="" /p:ProvisioningProfileUuid="" /p:EnableCodeSigning=false
         mv ./output/*.ipa ./build/ios/SNGPL.ipa
