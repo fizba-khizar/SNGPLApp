@@ -1,0 +1,11 @@
+# Ignore obj and bin directories
+bin/
+obj/
+
+# Ignore .vs folder (Visual Studio settings folder)
+.vs/
+
+# Ignore Mac or Android-specific generated files
+.android/
+.ios/
+.vscode/
