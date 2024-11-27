@@ -38,5 +38,5 @@ jobs:
 
     - name: Publish the iOS Project (IPA)
       run: |
-        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:PublishTrimmed=false /p:LinkerBehavior=LinkFramework
+        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:RuntimeIdentifier=ios-arm64 /p:PublishTrimmed=false /p:LinkerBehavior=LinkFramework
         mv ./output/*.ipa ./build/ios/SNGPL.ipa
