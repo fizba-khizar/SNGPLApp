@@ -24,5 +24,5 @@ jobs:
       run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios
     - name: Publish the iOS Project (IPA)
       run: |
-        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output
+        dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output /p:PublishTrimmed=false
         mv ./output/*.ipa ./build/ios/SNGPL.ipa
