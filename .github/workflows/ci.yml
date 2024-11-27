@@ -15,10 +15,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
+    - name: Install .NET MAUI Workloads
+      run: |
+        dotnet workload install maui-android maui-ios
     - name: Restore dependencies
       run: dotnet restore
-    - name: Restore .NET MAUI Workloads
-      run: dotnet workload restore
     - name: Build iOS Project
       run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios
     - name: Publish the iOS Project (IPA)
