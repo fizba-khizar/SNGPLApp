@@ -40,4 +40,5 @@ jobs:
     - name: Publish the iOS Project (IPA without signing)
       run: |
         dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output -r ios-arm64 /p:MtouchCodeSign=false /p:RuntimeIdentifier=ios-arm64 /p:PlatformTarget=arm64 /p:PublishTrimmed=true /p:CodesignKey="" /p:ProvisioningProfileUuid="" /p:EnableCodeSigning=false
-        mv ./output/*.ipa ./build/ios/SNGPL.ipa
+         mkdir -p ./build/ios  # Create the target directory if it doesn't exist
+            mv ./output/*.ipa ./build/ios/SNGPL.ipa
