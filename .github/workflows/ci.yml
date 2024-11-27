@@ -7,21 +7,31 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '8.0'
+        dotnet-version: '8.0' # Make sure this matches the version you're using
+
+    - name: Clean Workloads Cache
+      run: |
+        dotnet workload clean
+        dotnet workload install maui-ios --skip-manifest-update
+
     - name: Install .NET MAUI Workloads
       run: |
         dotnet workload install maui-android maui-ios maccatalyst
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build iOS Project
       run: dotnet build SNGPL/SNGPL.csproj -c Release -f:net8.0-ios
+
     - name: Publish the iOS Project (IPA)
       run: |
         dotnet publish SNGPL/SNGPL.csproj -c Release -f:net8.0-ios -o ./output /p:PublishTrimmed=false
